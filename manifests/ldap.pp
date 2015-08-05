@@ -462,6 +462,7 @@ class keystone::ldap(
   $auth_pool_connection_lifetime       = 60,
   $package_ensure                      = present,
   $manage_packages                     = true,
+  $use_dumb_member                     = false,
 ) {
 
   include ::keystone::deps
@@ -556,6 +557,7 @@ class keystone::ldap(
     'ldap/use_auth_pool':                        value => $use_auth_pool;
     'ldap/auth_pool_size':                       value => $auth_pool_size;
     'ldap/auth_pool_connection_lifetime':        value => $auth_pool_connection_lifetime;
+    'ldap/use_dumb_member':                      value => $use_dumb_member;
     'identity/driver':                           value => $identity_driver;
     'credential/driver':                         value => $credential_driver;
     'assignment/driver':                         value => $assignment_driver;
