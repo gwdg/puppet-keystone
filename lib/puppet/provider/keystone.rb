@@ -189,14 +189,7 @@ class Puppet::Provider::Keystone < Puppet::Provider::Openstack
   end
 
   def self.get_auth_url
-    auth_url = nil
-    if ENV['OS_AUTH_URL']
-      auth_url = ENV['OS_AUTH_URL'].dup
-    elsif auth_url = get_os_vars_from_rcfile(rc_filename)['OS_AUTH_URL']
-    else
-      auth_url = admin_endpoint
-    end
-    return auth_url
+    return admin_endpoint
   end
 
   def self.get_section(group, name)
@@ -208,9 +201,7 @@ class Puppet::Provider::Keystone < Puppet::Provider::Openstack
 
   def self.get_service_url
     service_url = nil
-    if ENV['OS_URL']
-      service_url = ENV['OS_URL'].dup
-    elsif admin_endpoint
+    if admin_endpoint
       service_url = admin_endpoint
       service_url << "/v#{@credentials.version}"
     end
