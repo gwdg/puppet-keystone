@@ -128,7 +128,11 @@ Puppet::Type.type(:keystone_user).provide(
         credentials.project_id = projects[0][:id]
       else
         # last chance - try a domain scoped token
-        credentials.domain_name = domain
+        if domain_id
+          credentials.domain_id = domain_id
+        else
+          credentials.domain_name = domain
+        end
       end
 
       credentials.identity_api_version = '2' if credentials.auth_url =~ /v2\.0\/?$/
