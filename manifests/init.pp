@@ -811,16 +811,11 @@ admin_token will be removed in a later release")
   }
 
   if $manage_policyrcd {
-    # openstacklib policy_rcd only affects debian based systems.
-    Policy_rcd <| title == 'keystone' |> -> Package['keystone']
-    Policy_rcd['apache2'] -> Package['httpd']
-    # we don't have keystone service anymore starting from Newton
-    if ($::operatingsystem == 'Ubuntu') and (versioncmp($::operatingsystemmajrelease, '16') >= 0) {
-      $policy_services = 'apache2'
-    } else {
-      $policy_services = ['keystone', 'apache2']
+    policy_rcd { 'keystone':
+      ensure   => present,
+      set_code => '101',
+      before   => Package['keystone'],
     }
-    ensure_resource('policy_rcd', $policy_services, { ensure => present, 'set_code' => '101' })
   }
 
   include ::keystone::db
