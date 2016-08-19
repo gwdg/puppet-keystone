@@ -1122,6 +1122,18 @@ Support for deploying under eventlet will be dropped as of the M-release of Open
   } elsif $service_name == 'httpd' {
     include ::apache::params
     $service_name_real = $::apache::params::service_name
+
+    # Make sure keystone-all is stopped anyway (independent of policy_rcd), so that also migration from eventlet to WSGI works
+    class { '::keystone::service':
+      ensure         => 'stopped',
+      service_name   => $::keystone::params::service_name,
+      enable         => false,
+      hasstatus      => true,
+      hasrestart     => true,
+      validate       => false,
+      before         => Service['httpd']
+    }
+
   } else {
     fail("Invalid service_name. Either keystone/openstack-keystone for \
 running as a standalone service, or httpd for being run by a httpd server")
