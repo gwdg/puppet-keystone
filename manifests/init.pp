@@ -64,7 +64,7 @@
 #
 # [*token_provider*]
 #   (optional) Format keystone uses for tokens.
-#   Defaults to 'uuid'
+#   Defaults to 'fernet'
 #   Supports pki, pkiz, fernet, and uuid.
 #
 # [*token_driver*]
