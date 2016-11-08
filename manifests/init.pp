@@ -205,28 +205,8 @@
 #   (optional) Location of rabbitmq installation.
 #    Defaults to $::os_service_default
 #
-# [*rabbit_port*]
-#   (optional) Port for rabbitmq instance.
-#   Defaults to $::os_service_default
-#
-# [*rabbit_hosts*]
-#   (optional) Location of rabbitmq installation.
-#   Defaults to $::os_service_default
-#
 # [*rabbit_ha_queues*]
 #   (Optional) Use HA queues in RabbitMQ.
-#   Defaults to $::os_service_default
-#
-# [*rabbit_password*]
-#   (optional) Password used to connect to rabbitmq.
-#   Defaults to $::os_service_default
-#
-# [*rabbit_userid*]
-#   (optional) User used to connect to rabbitmq.
-#   Defaults to $::os_service_default
-#
-# [*rabbit_virtual_host*]
-#   (optional) The RabbitMQ virtual host.
 #   Defaults to $::os_service_default
 #
 # [*rabbit_heartbeat_timeout_threshold*]
@@ -622,6 +602,30 @@
 #   (optional) Deprecated. Key size (in bits) for token signing cert (auto generated certificate)
 #   Defaults to $::os_service_default
 #
+# [*rabbit_host*]
+#   (optional) Location of rabbitmq installation.
+#    Defaults to $::os_service_default
+#
+# [*rabbit_port*]
+#   (optional) Port for rabbitmq instance.
+#   Defaults to $::os_service_default
+#
+# [*rabbit_hosts*]
+#   (optional) Location of rabbitmq installation.
+#   Defaults to $::os_service_default
+#
+# [*rabbit_password*]
+#   (optional) Password used to connect to rabbitmq.
+#   Defaults to $::os_service_default
+#
+# [*rabbit_userid*]
+#   (optional) User used to connect to rabbitmq.
+#   Defaults to $::os_service_default
+#
+# [*rabbit_virtual_host*]
+#   (optional) The RabbitMQ virtual host.
+#   Defaults to $::os_service_default
+#
 # == Dependencies
 #  None
 #
@@ -701,12 +705,6 @@ class keystone(
   $database_min_pool_size               = undef,
   $database_max_pool_size               = undef,
   $database_max_overflow                = undef,
-  $rabbit_host                          = $::os_service_default,
-  $rabbit_hosts                         = $::os_service_default,
-  $rabbit_password                      = $::os_service_default,
-  $rabbit_port                          = $::os_service_default,
-  $rabbit_userid                        = $::os_service_default,
-  $rabbit_virtual_host                  = $::os_service_default,
   $rabbit_heartbeat_timeout_threshold   = $::os_service_default,
   $rabbit_heartbeat_rate                = $::os_service_default,
   $rabbit_use_ssl                       = $::os_service_default,
@@ -767,6 +765,12 @@ class keystone(
   $signing_ca_key                       = $::os_service_default,
   $signing_cert_subject                 = $::os_service_default,
   $signing_key_size                     = $::os_service_default,
+  $rabbit_host                          = $::os_service_default,
+  $rabbit_hosts                         = $::os_service_default,
+  $rabbit_password                      = $::os_service_default,
+  $rabbit_port                          = $::os_service_default,
+  $rabbit_userid                        = $::os_service_default,
+  $rabbit_virtual_host                  = $::os_service_default,
 ) inherits keystone::params {
 
   include ::keystone::deps
@@ -779,6 +783,17 @@ use a Puppet resource collector if you want to modify the service provider.")
 
   if $verbose {
     warning('verbose is deprecated, has no effect and will be removed after Newton cycle.')
+  }
+
+  if !is_service_default($rabbit_host) or
+    !is_service_default($rabbit_hosts) or
+    !is_service_default($rabbit_password) or
+    !is_service_default($rabbit_port) or
+    !is_service_default($rabbit_userid) or
+    !is_service_default($rabbit_virtual_host) {
+    warning("keystone::rabbit_host, keystone::rabbit_hosts, keystone::rabbit_password, \
+keystone::rabbit_port, keystone::rabbit_userid and keystone::rabbit_virtual_host are \
+deprecated. Please use keystone::default_transport_url instead.")
   }
 
   if ! $catalog_driver {
