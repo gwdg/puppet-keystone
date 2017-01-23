@@ -263,6 +263,12 @@
 #   (string value)
 #   Defaults to $::os_service_default
 #
+# [*notification_transport_url*]
+#   (optional) A URL representing the messaging driver to use for notifications
+#   and its full configuration. Transport URLs take the form:
+#     transport://user:pass@host1:port[,hostN:portN]/virtual_host
+#   Defaults to $::os_service_default
+#
 # [*notification_driver*]
 #   RPC driver. Not enabled by default (list value)
 #   Defaults to $::os_service_default
@@ -717,6 +723,7 @@ class keystone(
   $kombu_reconnect_delay                = $::os_service_default,
   $kombu_failover_strategy              = $::os_service_default,
   $kombu_compression                    = $::os_service_default,
+  $notification_transport_url           = $::os_service_default,
   $notification_driver                  = $::os_service_default,
   $notification_topics                  = $::os_service_default,
   $notification_format                  = $::os_service_default,
@@ -1057,8 +1064,9 @@ Fernet or UUID tokens are recommended.")
   }
 
   oslo::messaging::notifications { 'keystone_config':
-    driver => $notification_driver,
-    topics => $notification_topics,
+    transport_url => $notification_transport_url,
+    driver        => $notification_driver,
+    topics        => $notification_topics,
   }
 
   oslo::messaging::rabbit { 'keystone_config':
