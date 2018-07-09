@@ -62,6 +62,8 @@
 class keystone::federation::openidc (
   $methods,
   $idp_name,
+  $openidc_response_type       = "id_token",
+  $openidc_scope               = "openid email profile",
   $openidc_provider_metadata_url,
   $openidc_client_id,
   $openidc_client_secret,
@@ -71,6 +73,8 @@ class keystone::federation::openidc (
   $module_plugin               = 'keystone.auth.plugins.mapped.Mapped',
   $template_order              = 331,
   $package_ensure              = present,
+  $remote_id_attribute,
+  $trusted_dashboard,
 ) {
 
   include ::apache
@@ -86,7 +90,7 @@ class keystone::federation::openidc (
     fail('The external method should be dropped to avoid any interference with openidc')
   }
 
-  if !('openidc' in $methods ) {
+  if !('oidc' in $methods ) {
     fail('Methods should contain openidc as one of the auth methods.')
   } else {
     if ($module_plugin != 'keystone.auth.plugins.mapped.Mapped') {
@@ -103,7 +107,10 @@ class keystone::federation::openidc (
 
   keystone_config {
     'auth/methods': value => join(any2array($methods),',');
-    'auth/openidc': value => $module_plugin;
+    'auth/oidc': value => $module_plugin;
+    'oidc/remote_id_attribute': value => $remote_id_attribute;
+    'federation/remote_id_attribute': value => $remote_id_attribute;
+    'federation/trusted_dashboard': value => $trusted_dashboard;
   }
 
   ensure_packages([$::keystone::params::openidc_package_name], {
@@ -121,7 +128,7 @@ class keystone::federation::openidc (
   if $main_port {
     keystone::federation::openidc_httpd_configuration{ 'main':
       port              => $::keystone::public_port,
-      keystone_endpoint => $::keystone::admin_endpoint,
+      keystone_endpoint => $::keystone::public_endpoint,
     }
   }
 
