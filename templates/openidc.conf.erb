@@ -9,14 +9,17 @@
   OIDCClientSecret "<%= scope['keystone::federation::openidc::openidc_client_secret']-%>"
   OIDCCryptoPassphrase "<%= scope['keystone::federation::openidc::openidc_crypto_passphrase']-%>"
 
-  OIDCRedirectURI "<%= @keystone_endpoint-%>/v3/OS-FEDERATION/identity_providers/<%= scope['keystone::federation::openidc::idp_name']-%>/protocols/openidc/auth/redirect"
-  <LocationMatch /v3/OS-FEDERATION/identity_providers/.*?/protocols/openidc/auth>
-      AuthType "openid-connect"
-      Require valid-user
-  </LocationMatch>
+  # OAuth for CLI access
+  OIDCOAuthIntrospectionEndpoint "<%= scope['keystone::federation::openidc::openidcauth_introspection_endpoint']-%>"
+  OIDCOAuthClientID "<%= scope['keystone::federation::openidc::openidcauth_client_id']-%>"
+  OIDCOAuthClientSecret "<%= scope['keystone::federation::openidc::openidcauth_client_secret']-%>"
 
-  OIDCRedirectURI "<%= @keystone_endpoint-%>/v3/auth/OS-FEDERATION/identity_providers/<%= scope['keystone::federation::openidc::idp_name']-%>/protocols/openidc/websso/redirect"
-  <LocationMatch /v3/auth/OS-FEDERATION/identity_providers/.*?/protocols/openidc/websso>
+  <Location ~ /v3/auth/OS-FEDERATION/websso/oidc>
       AuthType "openid-connect"
       Require valid-user
-  </LocationMatch>
+  </Location>
+
+  <Location ~ "/v3/OS-FEDERATION/identity_providers/<%= scope['keystone::federation::openidc::idp_name']-%>/protocols/oidc/auth">
+        Authtype oauth20
+        Require   valid-user
+  </Location>
