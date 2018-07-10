@@ -3,10 +3,10 @@
   OIDCClaimDelimiter ;
   OIDCResponseType "<%= scope['keystone::federation::openidc::openidc_response_type']-%>"
   OIDCScope "<%= scope['keystone::federation::openidc::openidc_scope']-%>"
-  OIDCProviderMetadataURL <%= scope['keystone::federation::openidc::openidc_provider_metadata_url']-%>
-  OIDCClientID <%= scope['keystone::federation::openidc::openidc_client_id']-%>
-  OIDCClientSecret <%= scope['keystone::federation::openidc::openidc_client_secret']-%>
-  OIDCCryptoPassphrase <%= scope['keystone::federation::openidc::openidc_crypto_passphrase']-%>
+  OIDCProviderMetadataURL <%= scope['keystone::federation::openidc::openidc_provider_metadata_url'] %>
+  OIDCClientID <%= scope['keystone::federation::openidc::openidc_client_id'] %>
+  OIDCClientSecret <%= scope['keystone::federation::openidc::openidc_client_secret'] %>
+  OIDCCryptoPassphrase <%= scope['keystone::federation::openidc::openidc_crypto_passphrase'] %>
   OIDCRedirectURI <%= @openidc_redirect_uri-%>
 
   #<Location ~ "/v3/auth/OS-FEDERATION/websso/oidc">
