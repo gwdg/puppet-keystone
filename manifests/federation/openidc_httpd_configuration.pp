@@ -16,7 +16,7 @@ define keystone::federation::openidc_httpd_configuration (
   $port              = undef,
   $keystone_endpoint = undef
 ) {
-  $openidc_redirect_uri = "${keystone_endpoint}/v3/auth/OS-FEDERATION/websso/oidc/redirect"
+  $openidc_redirect_uri = "${keystone_endpoint}/v3/OS-FEDERATION/identity_providers/egi.eu/protocols/oidc/auth/redirect"
   concat::fragment { "configure_openidc_on_port_${port}":
     target  => "${keystone::wsgi::apache::priority}-keystone_wsgi_${title}.conf",
     content => template('keystone/openidc.conf.erb'),
