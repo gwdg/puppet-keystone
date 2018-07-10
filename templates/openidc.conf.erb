@@ -1,25 +1,21 @@
   LoadModule auth_openidc_module /usr/lib/apache2/modules/mod_auth_openidc.so
-  WSGIScriptAliasMatch ^(/v3/OS-FEDERATION/identity_providers/.*?/protocols/.*?/auth)$ <%= scope['keystone::params::keystone_wsgi_script_path'] -%>/$1
   OIDCClaimPrefix "OIDC-"
   OIDCClaimDelimiter ;
   OIDCResponseType "<%= scope['keystone::federation::openidc::openidc_response_type']-%>"
   OIDCScope "<%= scope['keystone::federation::openidc::openidc_scope']-%>"
-  OIDCProviderMetadataURL "<%= scope['keystone::federation::openidc::openidc_provider_metadata_url']-%>"
-  OIDCClientID "<%= scope['keystone::federation::openidc::openidc_client_id']-%>"
-  OIDCClientSecret "<%= scope['keystone::federation::openidc::openidc_client_secret']-%>"
-  OIDCCryptoPassphrase "<%= scope['keystone::federation::openidc::openidc_crypto_passphrase']-%>"
+  OIDCProviderMetadataURL <%= scope['keystone::federation::openidc::openidc_provider_metadata_url']-%>
+  OIDCClientID <%= scope['keystone::federation::openidc::openidc_client_id']-%>
+  OIDCClientSecret <%= scope['keystone::federation::openidc::openidc_client_secret']-%>
+  OIDCCryptoPassphrase <%= scope['keystone::federation::openidc::openidc_crypto_passphrase']-%>
+  OIDCRedirectURI <%= @openidc_redirect_uri-%>
 
-  # OAuth for CLI access
-  OIDCOAuthIntrospectionEndpoint "<%= scope['keystone::federation::openidc::openidcauth_introspection_endpoint']-%>"
-  OIDCOAuthClientID "<%= scope['keystone::federation::openidc::openidcauth_client_id']-%>"
-  OIDCOAuthClientSecret "<%= scope['keystone::federation::openidc::openidcauth_client_secret']-%>"
+  #<Location ~ "/v3/auth/OS-FEDERATION/websso/oidc">
+  #    AuthType "openid-connect"
+  #    Require valid-user
+  #</Location>
 
-  <Location ~ /v3/auth/OS-FEDERATION/websso/oidc>
-      AuthType "openid-connect"
-      Require valid-user
-  </Location>
-
-  <Location ~ "/v3/OS-FEDERATION/identity_providers/<%= scope['keystone::federation::openidc::idp_name']-%>/protocols/oidc/auth">
-        Authtype oauth20
+  <Location ~ "/v3/OS-FEDERATION/identity_providers/.*?/protocols/oidc/auth">
+        Authtype openid-connect
         Require   valid-user
+        LogLevel debug
   </Location>
