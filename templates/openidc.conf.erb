@@ -9,13 +9,13 @@
   OIDCCryptoPassphrase <%= scope['keystone::federation::openidc::openidc_crypto_passphrase'] %>
   OIDCRedirectURI <%= @openidc_redirect_uri-%>
 
-  #<Location ~ "/v3/auth/OS-FEDERATION/websso/oidc">
-  #    AuthType "openid-connect"
-  #    Require valid-user
-  #</Location>
+  <Location ~ "/v3/auth/OS-FEDERATION/websso/oidc">
+      AuthType openid-connect
+      Require valid-user
+  </Location>
 
-  <Location ~ "/v3/OS-FEDERATION/identity_providers/.*?/protocols/oidc/auth">
-        Authtype openid-connect
-        Require   valid-user
-        LogLevel debug
+  <Location ~ "/v3/auth/OS-FEDERATION/identity_providers/<%= scope['keystone::federation::openidc::idp_name'] -%>/protocols/oidc/websso">
+      AuthType openid-connect
+      Require  valid-user
+      LogLevel debug
   </Location>
