@@ -73,7 +73,6 @@ class keystone::federation::openidc (
   $openidc_client_id,
   $openidc_client_secret,
   $openidc_crypto_passphrase   = 'openstack',
-  $openidc_response_type       = 'id_token',
   $openidcauth_introspection_endpoint,
   $openidcauth_client_id,
   $openidcauth_client_secret,
