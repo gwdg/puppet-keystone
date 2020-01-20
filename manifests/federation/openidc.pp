@@ -77,6 +77,8 @@ class keystone::federation::openidc (
   $module_plugin               = 'keystone.auth.plugins.mapped.Mapped',
   $template_order              = 331,
   $package_ensure              = present,
+  $public_endpoint             = $::os_service_default,
+  $admin_endpoint              = $::os_service_default,
 ) {
 
   include ::apache
@@ -120,14 +122,14 @@ class keystone::federation::openidc (
   if $admin_port {
     keystone::federation::openidc_httpd_configuration{ 'admin':
       port              => $::keystone::admin_port,
-      keystone_endpoint => $::keystone::admin_endpoint,
+      keystone_endpoint => $admin_endpoint,
     }
   }
 
   if $main_port {
     keystone::federation::openidc_httpd_configuration{ 'main':
       port              => $::keystone::public_port,
-      keystone_endpoint => $::keystone::public_endpoint,
+      keystone_endpoint => $public_endpoint,
     }
   }
 
