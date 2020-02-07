@@ -19,6 +19,8 @@ describe 'keystone::policy' do
       is_expected.to contain_openstacklib__policy__base('context_is_admin').with({
         :key   => 'context_is_admin',
         :value => 'foo:bar'
+        :file_user  => 'keystone',
+        :file_group => 'keystone',
       })
       is_expected.to contain_oslo__policy('keystone_config').with(
         :policy_file => '/etc/keystone/policy.json',
